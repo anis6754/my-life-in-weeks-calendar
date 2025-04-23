@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Life in Weeks - Visualize Your Time</title>
+    <!-- SEO Meta Description -->
+    <meta name="description" content="Visualize your life week by week with this interactive calendar. Track achievements, milestones, and make every week count towards your goals.">
+    <!-- Tailwind CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Google Font Montserrat -->
+    <link href="https://cdn.jsdelivr.net/npm/@fontsource/montserrat@4.5.13/index.css" rel="stylesheet">
+    <style>
+        :root {
+            /* Colors */
+            --color-bg: #f9fafb; --color-text: #1f2937; --color-text-on-dark: #e5e7eb;
+            --color-blue-400: #60a5fa; --color-blue-500: #3b82f6; --color-blue-600: #2563eb;
+            --color-sky-50: #f0f9ff; --color-sky-200: #bae6fd; --color-sky-300: #7dd3fc; --color-sky-400: #38bdf8; --color-sky-600: #0284c7; --color-sky-700: #0369a1; --color-sky-800: #075985;
+            --color-gray-50: #f9fafb; --color-gray-100: #f3f4f6; --color-gray-200: #e5e7eb; --color-gray-300: #d1d5db; --color-gray-400: #9ca3af; --color-gray-500: #6b7280;
+            --color-gray-600: #4b5563; --color-gray-700: #374151; --color-gray-800: #1f2937; --color-gray-900: #111827;
+            --color-green-400: #34d399; --color-green-500: #10b981; --color-green-600: #059669;
+            --color-red-400: #f87171; --color-red-500: #ef4444; --color-red-600: #dc2626;
+            --color-yellow-400: #fbbf24; --color-yellow-500: #f59e0b; --color-yellow-600: #d97706;
+            --color-purple-400: #a78bfa; --color-purple-500: #8b5cf6; --color-purple-600: #7c3aed;
+            --color-indigo-400: #818cf8; --color-indigo-500: #6366f1; --color-indigo-600: #4f46e5;
+            --color-orange-400: #fb923c; --color-orange-500: #f97316; --color-orange-600: #ea580c; --color-orange-700: #c2410c;
+            --color-teal-400: #2dd4bf; --color-teal-500: #14b8a6; --color-teal-600: #0d9488; --color-teal-700: #0f766e;
+            /* Background Gradient Colors (Dark Theme Inspired) */
+            --bg-dark-base: #0f172a; --bg-glow-1: #38bdf8; --bg-glow-2: #a78bfa; --bg-glow-3: #ec4899;
+            /* Dark Theme Variables */
+            --dark-glass-bg: rgba(30, 41, 59, 0.75); --dark-glass-border: rgba(255, 255, 255, 0.15);
+            --dark-text-primary: #e2e8f0; --dark-text-secondary: #94a3b8; --dark-text-heading: #cbd5e1;
+            --dark-footer-bg: rgba(15, 23, 42, 0.8); --dark-input-bg: #1e293b; --dark-input-border: #334155;
+            --dark-button-bg: #334155; --dark-button-hover-bg: #475569; --dark-weekbox-bg: #334155;
+            --dark-weekbox-border: #475569; --dark-weekbox-prebirth-bg: rgba(51, 65, 85, 0.5);
+            --dark-weekbox-prebirth-border: rgba(71, 85, 105, 0.6); --dark-quote-bg: rgba(15, 23, 42, 0.7);
+            --dark-quote-border: var(--color-sky-700); --dark-quote-text: var(--color-sky-300);
+            --dark-quote-author: var(--color-slate-400); --dark-agecounter-bg: rgba(15, 23, 42, 0.7);
+            --dark-agecounter-border: var(--color-sky-800); --dark-agecounter-num: var(--color-blue-400);
+            --dark-agecounter-label: var(--color-sky-400); --dark-statcard-bg: rgba(30, 41, 59, 0.85);
+            --dark-statcard-text: var(--dark-text-secondary); --dark-statcard-num: var(--dark-text-primary);
+        }
+
+        /* --- Animated Background --- */
+        @keyframes moveGlows { 0% { background-position: 0% 0%; } 50% { background-position: 100% 100%; } 100% { background-position: 0% 0%; } }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Montserrat', sans-serif; color: var(--color-text); padding: 30px 15px; max-width: 1400px; margin: 0 auto; line-height: 1.6; min-height: 100vh; background-color: var(--bg-dark-base); background-image: radial-gradient(at 20% 15%, hsla(200, 80%, 55%, 0.3) 0px, transparent 50%), radial-gradient(at 85% 30%, hsla(260, 70%, 65%, 0.25) 0px, transparent 50%), radial-gradient(at 30% 85%, hsla(330, 75%, 60%, 0.2) 0px, transparent 50%), radial-gradient(at 70% 75%, hsla(220, 60%, 50%, 0.2) 0px, transparent 50%); background-size: 300% 300%; background-position: 0% 0%; animation: moveGlows 50s ease infinite alternate; overflow-x: hidden; }
+
+        /* --- Modern Container Styles --- */
+        .glass-container { background-color: rgba(230, 235, 250, 0.9); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); padding: 20px 25px; border-radius: 16px; box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2), 0 8px 32px rgba(0,0,0,0.15); margin-bottom: 30px; position: relative; }
+        .visualization-container { background-color: rgba(230, 235, 250, 0.85); box-shadow: inset 0 0 40px rgba(59, 130, 246, 0.06), 0 8px 32px rgba(0,0,0,0.15); overflow-x: auto; position: relative; }
+        .quote-card { background-color: rgba(240, 249, 255, 0.9); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); border-left: 4px solid var(--color-sky-600); padding: 15px 20px; margin: 25px 0; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
+        .age-counter { background-color: rgba(240, 249, 255, 0.9); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); border-radius: 10px; padding: 15px; text-align: center; margin: 20px 0; border: 1px solid var(--color-sky-200); }
+        footer { background-color: rgba(15, 23, 42, 0.6); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); color: var(--color-text-on-dark); padding: 20px; border-radius: 10px; margin-top: 30px; box-shadow: 0 -4px 15px rgba(0,0,0,0.1); border-top: 1px solid rgba(255, 255, 255, 0.1); }
+        footer p { color: var(--color-text-on-dark); }
+
+        /* --- Heading Colors --- */
+        .header-container h1 { color: var(--color-blue-600); }
+        .controls h2 { color: var(--color-purple-600); }
+        .stats-container h3 { color: var(--color-indigo-600); }
+        .visualization-container .view-controls h3 { color: var(--color-gray-700); }
+        #aboutSection h3 { color: var(--color-teal-600); }
+
+        /* --- Base Week Box Styles --- */
+        .week-box { width: 15px; height: 15px; margin: 1px; cursor: pointer; transition: all 0.2s ease-in-out; border-radius: 3px; border: 1px solid rgba(0, 0, 0, 0.1); flex-shrink: 0; display: inline-block; vertical-align: middle; background-color: rgba(243, 244, 246, 0.9); }
+        .week-box:hover { transform: scale(1.6); z-index: 10; box-shadow: 0 2px 10px rgba(0,0,0,0.2); border-color: var(--color-gray-500); }
+        .week-completed { background-color: var(--color-blue-500); border-color: var(--color-blue-600); }
+        .week-pre-birth { background-color: rgba(229, 231, 235, 0.5); border-color: rgba(209, 213, 219, 0.6); cursor: default; }
+        .week-pre-birth:hover { transform: none; box-shadow: none; border-color: rgba(209, 213, 219, 0.6); }
+        .week-achievement { background-color: var(--color-green-500); border-color: var(--color-green-600); }
+        .week-wasted { background-color: var(--color-red-500); border-color: var(--color-red-600); }
+        .week-milestone { background-color: var(--color-yellow-500); border-color: var(--color-yellow-600); }
+        .week-goal { background-color: var(--color-purple-500); border-color: var(--color-purple-600); }
+
+        /* Birthday Week Highlight */
+        @keyframes birthday-glow { 0%, 100% { box-shadow: 0 0 5px 2px var(--color-yellow-400); } 50% { box-shadow: 0 0 10px 4px var(--color-yellow-500); } }
+        .birthday-week { border: 2px solid var(--color-yellow-600) !important; position: relative; animation: birthday-glow 1.5s infinite ease-in-out; background-clip: padding-box; }
+        .birthday-week:hover { border-color: var(--color-yellow-600) !important; transform: scale(1.6); z-index: 11; box-shadow: 0 0 10px 4px var(--color-yellow-500), 0 2px 10px rgba(0,0,0,0.2); }
+
+        /* --- Grid/Year View Common Styles --- */
+        .year-label { text-align: right; font-size: 11px; width: 50px; padding-right: 10px; color: var(--color-gray-700); font-weight: 600; flex-shrink: 0; line-height: 15px; }
+        .week-label { font-size: 9px; text-align: center; width: 15px; color: var(--color-gray-600); font-weight: bold; margin: 1px; flex-shrink: 0; line-height: 1; }
+        .year-row { border-bottom: 1px solid rgba(0,0,0,0.05); display: flex; align-items: center; }
+        .year-row:nth-child(5n) { border-bottom: 1px solid rgba(0,0,0,0.1); }
+        .weeks-grid-container { display: flex; flex-wrap: nowrap; flex-grow: 1; }
+
+        /* --- Grid View Specific --- */
+        .grid-view-container .decade-label-container { display: flex; align-items: center; margin: 10px 0 5px 0; }
+        .grid-view-container .decade-label { text-align: center; font-weight: bold; padding: 6px 0; background-color: rgba(229, 231, 235, 0.8); color: var(--color-gray-700); border-radius: 6px; font-size: 0.8rem; letter-spacing: 0.5px; flex-grow: 1; }
+
+        /* --- Decade View Specific --- */
+        .decade-view-container { padding: 10px; }
+        .decade-separator { margin-top: 20px; margin-bottom: 10px; border-top: 2px solid rgba(255,255,255,0.15); text-align: center; }
+        .decade-separator span { display: inline-block; background-color: rgba(230, 235, 250, 0.85); padding: 0 15px; transform: translateY(-0.7em); font-weight: bold; color: var(--color-gray-700); border-radius: 4px; }
+        .decade-row { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 10px; }
+        .year-block { width: 50px; height: 50px; border: 1px solid var(--color-gray-300); border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 0.9em; font-weight: 600; cursor: pointer; transition: all 0.2s ease; background-color: rgba(243, 244, 246, 0.9); color: var(--color-gray-700); }
+        .year-block:hover { transform: scale(1.1); box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-color: var(--color-gray-500); z-index: 5;}
+        .year-block.past { background-color: var(--color-blue-500); color: white; border-color: var(--color-blue-600); }
+        .year-block.tagged { border-left: 4px solid var(--color-orange-500); padding-left: 2px; }
+
+         /* --- Year View Specific --- */
+        .year-view-container { padding: 10px 0; }
+        .year-view-labels-row { display: flex; margin-bottom: 2px; padding-left: 50px; /* Match year label width */ padding-right: 1px; /* Align with boxes */}
+        .year-view-grid-row { display: flex; align-items: center; margin-bottom: 0.5px; }
+
+
+        /* --- Week Labels Header Placeholder --- */
+        #weekLabelsHeaderPlaceholder { /* Container for the sticky header */ }
+        .sticky-header { display: flex; position: sticky; top: 0; padding: 1px 0; z-index: 10; backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); border-bottom: 1px solid rgba(0,0,0,0.05); }
+        html.dark .sticky-header { border-bottom-color: rgba(255,255,255,0.1); }
+        .year-label-spacer { width: 50px; padding-right: 10px; flex-shrink: 0; }
+        #weekLabelsContainer { display: flex; flex-grow: 1; }
+        #weekLabelsContainer .week-label { color: var(--color-gray-600); } /* Default light mode color */
+
+
+        /* --- Age Counter Prominence --- */
+        .age-counter-number { font-size: 2.1rem; font-weight: bold; color: var(--color-blue-500); }
+        .age-counter-label { font-size: 0.8rem; color: var(--color-sky-700); margin-top: -2px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .age-counter-days { font-size: 1.5rem; /* Smaller */ }
+        .age-counter-days-label { font-size: 0.7rem; /* Smaller */ }
+
+
+        /* --- Stat Card Hover --- */
+        .stat-card { background-color: rgba(255, 255, 255, 0.95); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); transition: all 0.3s ease-out; border-bottom: 4px solid transparent; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .stat-card:hover { transform: translateY(-6px); box-shadow: 0 6px 15px rgba(0,0,0,0.1); }
+        .stat-card.border-blue-500 { border-bottom-color: var(--color-blue-500); } .stat-card.border-indigo-500 { border-bottom-color: var(--color-indigo-500); } .stat-card.border-green-500 { border-bottom-color: var(--color-green-500); } .stat-card.border-yellow-500 { border-bottom-color: var(--color-yellow-500); }
+
+
+        /* --- Small Feedback Popup Styles & Animations --- */
+        @keyframes popup-bounce-in { 0% { opacity: 0; transform: translateY(20px) scale(0.8); } 70% { opacity: 1; transform: translateY(-5px) scale(1.05); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+        @keyframes icon-celebrate { 0%, 100% { transform: scale(1) rotate(0deg); } 25% { transform: scale(1.2) rotate(-5deg); } 75% { transform: scale(1.2) rotate(5deg); } }
+        @keyframes icon-wobble { 0% { transform: translateX(0%); } 15% { transform: translateX(-8%) rotate(-3deg); } 30% { transform: translateX(6%) rotate(2deg); } 45% { transform: translateX(-4%) rotate(-1deg); } 60% { transform: translateX(2%) rotate(1deg); } 75% { transform: translateX(-1%) rotate(0deg); } 100% { transform: translateX(0%); } }
+        @keyframes icon-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
+
+        #tagFeedbackPopup { position: fixed; display: flex; align-items: center; background-color: rgba(30, 30, 30, 0.95); color: white; font-size: 1rem; padding: 12px 20px; border-radius: 10px; box-shadow: 0 6px 20px rgba(0,0,0,0.4); z-index: 1000; opacity: 0; pointer-events: none; white-space: nowrap; transform: translateY(20px) scale(0.8); }
+        #tagFeedbackPopup.show { opacity: 1; transform: translateY(0) scale(1); animation: popup-bounce-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        #tagFeedbackPopup.hide { opacity: 0; transition: opacity 0.3s ease-out; transform: translateY(10px) scale(0.9); }
+        #popupIcon { margin-right: 12px; font-size: 1.4em; vertical-align: middle; display: inline-block; }
+        #tagFeedbackPopup.type-achievement #popupIcon, #tagFeedbackPopup.type-milestone #popupIcon { animation: icon-celebrate 0.8s ease-in-out infinite; }
+        #tagFeedbackPopup.type-goal #popupIcon { animation: icon-pulse 1s ease-in-out infinite; }
+        #tagFeedbackPopup.type-wasted #popupIcon { animation: icon-wobble 1s ease-in-out infinite; }
+        #popupIcon.text-green-400 { color: var(--color-green-400); } #popupIcon.text-red-400 { color: var(--color-red-400); } #popupIcon.text-yellow-400 { color: var(--color-yellow-400); } #popupIcon.text-purple-400 { color: var(--color-purple-400); }
+
+        /* --- Centered Feedback Popup Styles --- */
+        @keyframes centered-fade-in-out { 0%, 100% { opacity: 0; } 10%, 90% { opacity: 1; } }
+        @keyframes centered-content-bounce-in { 0% { opacity: 0; transform: scale(0.5); } 60% { opacity: 1; transform: scale(1.1); } 100% { opacity: 1; transform: scale(1); } }
+        @keyframes centered-icon-trophy-bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-20px); } 60% { transform: translateY(-10px); } }
+        @keyframes centered-icon-flag-wave { 0%, 100% { transform: scale(1) rotate(0deg); } 50% { transform: scale(1.1) rotate(5deg); } }
+        @keyframes centered-icon-goal-pulse { 0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(124, 58, 237, 0.5); } 50% { transform: scale(1.1); box-shadow: 0 0 0 15px rgba(124, 58, 237, 0); } }
+        @keyframes centered-icon-wasted-shake { 0% { transform: translateX(0) rotate(0); } 10%, 30%, 50%, 70%, 90% { transform: translateX(-5px) rotate(-2deg); } 20%, 40%, 60%, 80% { transform: translateX(5px) rotate(2deg); } 100% { transform: translateX(0) rotate(0); } }
+
+        #centeredFeedbackOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.4); display: flex; justify-content: center; align-items: center; z-index: 2000; opacity: 0; pointer-events: none; transition: opacity 0.3s ease-out; }
+        #centeredFeedbackOverlay.visible { opacity: 1; pointer-events: auto; animation: centered-fade-in-out var(--popup-duration, 1.8s) ease-in-out forwards; }
+        .feedback-content { background-color: #fff; color: var(--color-text); padding: 30px 40px; border-radius: 15px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); opacity: 0; }
+        #centeredFeedbackOverlay.visible .feedback-content { animation: centered-content-bounce-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        .feedback-icon { font-size: 4rem; margin-bottom: 15px; display: inline-block; }
+        .feedback-icon.animate-achievement { animation: centered-icon-trophy-bounce 0.8s ease-in-out; }
+        .feedback-icon.animate-milestone { animation: centered-icon-flag-wave 0.6s ease-in-out; }
+        .feedback-icon.animate-goal { animation: centered-icon-goal-pulse 1.2s infinite ease-out; }
+        .feedback-icon.animate-wasted { animation: centered-icon-wasted-shake 0.5s ease-in-out; }
+        /* Light mode icon colors (assigned by JS) */
+        .feedback-icon.text-green-500 { color: var(--color-green-500); }
+        .feedback-icon.text-yellow-500 { color: var(--color-yellow-500); }
+        .feedback-icon.text-purple-500 { color: var(--color-purple-500); }
+        .feedback-icon.text-red-500 { color: var(--color-red-500); }
+        /* Dark mode icon colors are set via specific CSS rules below */
+        .feedback-text { font-size: 1.4rem; font-weight: 600; }
+
+        /* Multi-select highlight style */
+        .week-box.multi-selected { outline: 2px dashed var(--color-orange-500); outline-offset: 1px; z-index: 15; }
+
+        /* Style for the reset button */
+        .bg-orange-500 { background-color: var(--color-orange-500); }
+        .hover\:bg-orange-600:hover { background-color: var(--color-orange-600); }
+        .active\:bg-orange-700:active { background-color: var(--color-orange-700); }
+        .focus\:ring-orange-400:focus { --tw-ring-color: var(--color-orange-500); }
+
+        /* View Switching Controls */
+        .view-controls button { background-color: rgba(255, 255, 255, 0.5); border: 1px solid rgba(0,0,0,0.1); }
+        .view-controls button.active { background-color: var(--color-blue-600); color: white; border-color: transparent;}
+        .view-controls button:disabled { opacity: 0.5; cursor: not-allowed; }
+        #yearSelectorContainer { transition: opacity 0.3s ease, max-height 0.3s ease; }
+        #yearSelectorContainer.hidden { opacity: 0; max-height: 0; overflow: hidden; margin-top: 0 !important; }
+
+        /* Birthday Click Animation Styles */
+        @keyframes age-popup-animate { 0% { opacity: 0; transform: translate(-50%, 10px) scale(0.8); } 50% { opacity: 1; transform: translate(-50%, -25px) scale(1.1); } 100% { opacity: 0; transform: translate(-50%, -50px) scale(0.9); } }
+        .age-popup { position: absolute; background-color: rgba(255, 255, 255, 0.95); color: var(--color-yellow-600); padding: 5px 10px; border-radius: 6px; font-size: 1.4rem; font-weight: bold; box-shadow: 0 3px 8px rgba(0,0,0,0.25); white-space: nowrap; z-index: 1001; pointer-events: none; transform: translateX(-50%); animation: age-popup-animate 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+
+        /* --- Mobile Scroll Hint --- */
+        @keyframes scroll-hint-bounce { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(8px); } }
+        #scrollHint {
+            position: absolute; right: 5px; top: 50%; transform: translateY(-50%);
+            font-size: 1.8rem; color: rgba(0, 0, 0, 0.3);
+            pointer-events: none; z-index: 20; opacity: 0; transition: opacity 0.5s ease-out;
+        }
+        #scrollHint.visible { opacity: 1; animation: scroll-hint-bounce 1.5s ease-in-out 3; }
+        html.dark #scrollHint { color: rgba(255, 255, 255, 0.4); }
+        @media (min-width: 768px) { #scrollHint { display: none; } }
+
+        /* --- REMOVED About Modal Styles --- */
+
+        /* --- Dark Mode Styles --- */
+        html.dark { --color-text: var(--dark-text-primary); }
+        html.dark body { color: var(--dark-text-primary); }
+        html.dark .glass-container { background-color: var(--dark-glass-bg); border-color: var(--dark-glass-border); box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05), 0 8px 32px rgba(0,0,0,0.3); }
+        html.dark .visualization-container { background-color: rgba(30, 41, 59, 0.6); box-shadow: inset 0 0 40px rgba(59, 130, 246, 0.1), 0 8px 32px rgba(0,0,0,0.3); }
+        html.dark h1, html.dark h2, html.dark h3, html.dark h4 { color: var(--dark-text-heading); }
+        html.dark .header-container h1 { color: var(--color-blue-400); }
+        html.dark .controls h2 { color: var(--color-purple-400); }
+        html.dark .stats-container h3 { color: var(--color-indigo-400); }
+        html.dark #aboutSection h3 { color: var(--color-teal-400); } /* Dark mode for About section heading */
+        html.dark .visualization-container .view-controls h3 { color: var(--dark-text-secondary); }
+        html.dark p, html.dark label, html.dark span:not(.age-counter-number):not(.age-counter-label):not(.decade-label span):not(.feedback-text):not(#popupText) { color: var(--dark-text-secondary); }
+        /* Ensure About section text is readable in dark mode */
+        html.dark #aboutSection p, html.dark #aboutSection li, html.dark #aboutSection strong { color: var(--dark-text-secondary); }
+        html.dark #aboutSection strong.font-semibold { color: var(--dark-text-primary); }
+        html.dark .font-medium { color: var(--dark-text-primary); }
+        html.dark .quote-card { background-color: var(--dark-quote-bg); border-left-color: var(--dark-quote-border); }
+        html.dark .quote-text { color: var(--dark-quote-text); }
+        html.dark .quote-author { color: var(--dark-quote-author); }
+        html.dark .age-counter { background-color: var(--dark-agecounter-bg); border-color: var(--dark-agecounter-border); }
+        html.dark .age-counter-number { color: var(--dark-agecounter-num); }
+        html.dark .age-counter-label { color: var(--dark-agecounter-label); }
+        html.dark #bonusTimeWarning { color: var(--color-green-400); }
+        html.dark footer { background-color: var(--dark-footer-bg); color: var(--dark-text-primary); border-top-color: var(--dark-glass-border); }
+        html.dark footer p { color: var(--dark-text-primary); }
+
+        /* Base dark week box */
+        html.dark .week-box { background-color: var(--dark-weekbox-bg); border-color: var(--dark-weekbox-border); }
+        html.dark .week-pre-birth { background-color: var(--dark-weekbox-prebirth-bg); border-color: var(--dark-weekbox-prebirth-border); }
+        html.dark .week-pre-birth:hover { border-color: var(--dark-weekbox-prebirth-border); }
+
+        /* Explicit Tag Colors for Grid/Year View & Legend in Dark Mode */
+        html.dark #calendarArea .week-box.week-completed,
+        html.dark .controls .grid .week-box.week-completed { background-color: var(--color-blue-500); border-color: var(--color-blue-600); }
+        html.dark #calendarArea .week-box.week-achievement,
+        html.dark .controls .grid .week-box.week-achievement { background-color: var(--color-green-500); border-color: var(--color-green-600); }
+        html.dark #calendarArea .week-box.week-wasted,
+        html.dark .controls .grid .week-box.week-wasted { background-color: var(--color-red-500); border-color: var(--color-red-600); }
+        html.dark #calendarArea .week-box.week-milestone,
+        html.dark .controls .grid .week-box.week-milestone { background-color: var(--color-yellow-500); border-color: var(--color-yellow-600); }
+        html.dark #calendarArea .week-box.week-goal,
+        html.dark .controls .grid .week-box.week-goal { background-color: var(--color-purple-500); border-color: var(--color-purple-600); }
+        html.dark .controls .grid .text-sm { color: var(--dark-text-secondary); } /* Legend label color */
+
+        /* Birthday week uses original bright colors */
+        html.dark #calendarArea .birthday-week { border-color: var(--color-yellow-600) !important; /* Keep border bright */ }
+        html.dark .birthday-week:hover { border-color: var(--color-yellow-600) !important; }
+
+        /* Week Labels Header Dark Mode */
+        html.dark #stickyWeekLabels { border-bottom-color: rgba(255,255,255,0.1); }
+        html.dark #weekLabelsContainer .week-label { color: var(--dark-text-secondary); } /* Dark mode week label color */
+        html.dark .year-view-labels .week-label { color: var(--dark-text-secondary); } /* Dark mode year view labels */
+
+        /* Decade View Dark Mode */
+        html.dark .decade-separator { border-top-color: rgba(255,255,255,0.2); }
+        html.dark .decade-separator span { background-color: var(--dark-glass-bg); color: var(--dark-text-primary); }
+        html.dark .year-block { background-color: var(--dark-weekbox-bg); border-color: var(--dark-weekbox-border); color: var(--dark-text-secondary); }
+        html.dark .year-block:hover { border-color: var(--dark-text-secondary); }
+        html.dark .year-block.past { background-color: var(--color-blue-600); border-color: var(--color-blue-700); color: white; }
+
+        /* Year View Dark Mode */
+        html.dark .year-view-header { color: var(--color-blue-400); }
+
+        /* Stats Dark Mode */
+        html.dark .stat-card { background-color: var(--dark-statcard-bg); }
+        html.dark .stat-card h4 { color: var(--dark-text-heading); }
+        html.dark .stat-card p { color: var(--dark-statcard-num); }
+        html.dark .stat-card .text-sm { color: var(--dark-statcard-text); }
+
+        /* Forms Dark Mode */
+        html.dark input[type="date"], html.dark input[type="number"], html.dark input[type="text"], html.dark select { background-color: var(--dark-input-bg); border-color: var(--dark-input-border); color: var(--dark-text-primary); }
+        html.dark input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); }
+        html.dark .view-controls button { background-color: var(--dark-button-bg); border-color: var(--dark-button-hover-bg); color: var(--dark-text-primary); }
+        html.dark .view-controls button:hover { background-color: var(--dark-button-hover-bg); }
+        html.dark .view-controls button.active { background-color: var(--color-blue-500); border-color: var(--color-blue-500); color: white; }
+
+        /* Popups Dark Mode */
+        html.dark #tagFeedbackPopup { background-color: rgba(226, 232, 240, 0.95); color: var(--bg-dark-base); }
+        html.dark #centeredFeedbackOverlay { background-color: rgba(0, 0, 0, 0.7); }
+        html.dark .feedback-content { background-color: #1e293b; color: var(--dark-text-primary); }
+        html.dark .feedback-text { color: var(--dark-text-primary); }
+        /* Explicit Centered Feedback Icon Colors in Dark Mode */
+        html.dark .feedback-icon.text-green-500, html.dark .feedback-icon.text-green-400 { color: var(--color-green-400) !important; }
+        html.dark .feedback-icon.text-yellow-500, html.dark .feedback-icon.text-yellow-400 { color: var(--color-yellow-400) !important; }
+        html.dark .feedback-icon.text-purple-500, html.dark .feedback-icon.text-purple-400 { color: var(--color-purple-400) !important; }
+        html.dark .feedback-icon.text-red-500, html.dark .feedback-icon.text-red-400 { color: var(--color-red-400) !important; }
+        html.dark .week-box[style*="outline"] { outline-color: var(--color-orange-400) !important; }
+        html.dark .age-popup { background-color: rgba(30, 41, 59, 0.95); color: var(--color-yellow-400); } /* Dark birthday popup */
+        html.dark #selectedWeekInfo { background-color: var(--dark-input-bg); border-color: var(--dark-input-border);} /* Dark info panel */
+        html.dark #aboutSection { background-color: var(--dark-glass-bg); border-color: var(--dark-glass-border); } /* Dark About section */
+        html.dark #aboutSection h3 { color: var(--color-teal-400); }
+        html.dark #aboutSection p, html.dark #aboutSection li, html.dark #aboutSection strong { color: var(--dark-text-secondary); }
+        html.dark #aboutSection strong.font-semibold { color: var(--dark-text-primary); }
+        html.dark #weekLabelsContainer .week-label { color: var(--dark-text-secondary); } /* Dark mode week label color */
+        html.dark .year-view-labels .week-label { color: var(--dark-text-secondary); } /* Dark mode year view labels */
+
+        /* Import/Export Button Specific Styles */
+        #importBtn { background-color: var(--color-teal-500); }
+        #importBtn:hover { background-color: var(--color-teal-600); }
+        #importBtn:active { background-color: var(--color-teal-700); }
+        html.dark #importBtn { background-color: var(--color-teal-600); }
+        html.dark #importBtn:hover { background-color: var(--color-teal-500); }
+        html.dark #importBtn:active { background-color: var(--color-teal-700); }
+
+        /* Footer Link Hover Effects */
+        footer a:hover i { color: var(--color-sky-300); }
+        footer a:hover span { color: var(--color-sky-300); }
+        footer a:nth-of-type(2):hover i { color: var(--color-green-400); }
+        footer a:nth-of-type(2):hover span { color: var(--color-green-400); }
+
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header-container glass-container">
+        <!-- Theme Toggle Button -->
+        <button id="themeToggleBtn" class="absolute top-4 right-4 p-2 rounded-full bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500" title="Toggle Dark/Light Mode">
+            <i id="themeToggleIcon" class="bi bi-moon-stars-fill text-gray-700 dark:text-yellow-400"></i>
+        </button>
+        <!-- REMOVED About Button -->
+
+        <h1 class="text-4xl font-bold mb-2 text-center">My Life in Weeks</h1>
+        <h2 class="text-xl text-center text-gray-700 dark:text-gray-300 mb-6">Visualize Your Past, Shape Your Future.</h2>
+        <div class="quote-card"><p class="quote-text">"The two most powerful warriors are patience and time."</p><p class="quote-author">— Leo Tolstoy</p></div>
+        <div class="age-counter">
+            <h3 class="text-lg font-semibold text-sky-700 dark:text-sky-300 mb-3">Your Current Age</h3>
+            <div class="flex justify-center gap-5 md:gap-8 flex-wrap">
+                <div class="text-center"><span id="years" class="age-counter-number">0</span><span class="age-counter-label block">Years</span></div>
+                <div class="text-center"><span id="months" class="age-counter-number">0</span><span class="age-counter-label block">Months</span></div>
+                <div class="text-center"><span id="weeks" class="age-counter-number">0</span><span class="age-counter-label block">Weeks</span></div>
+                <div class="text-center"><span id="days" class="age-counter-number age-counter-days">0</span><span class="age-counter-label age-counter-days-label block">Days Left</span></div> <!-- Added Days -->
+            </div>
+             <p id="bonusTimeWarning" class="text-center text-sm text-green-600 dark:text-green-400 font-medium mt-3 hidden"></p>
+            <div class="text-sm text-gray-700 dark:text-gray-300 mt-4 flex items-center justify-center flex-wrap gap-x-4 gap-y-2">
+                <p>
+                    <label for="birthDateInput" class="font-medium">Born on:</label>
+                    <input type="date" id="birthDateInput" class="border border-sky-300 dark:border-sky-700 rounded px-2 py-1 text-sm focus:ring-2 focus:ring-sky-300 focus:outline-none w-32 bg-white dark:bg-slate-800 dark:text-gray-200" value="2000-01-01">
+                    <button id="updateBirthDateBtn" class="px-3 py-1 bg-gray-700 dark:bg-gray-600 text-white text-sm rounded hover:bg-gray-800 dark:hover:bg-gray-500 active:bg-gray-900 dark:active:bg-gray-400 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50" title="Update calendar based on new birth date">
+                        <i class="bi bi-calendar-check mr-1"></i> Update
+                    </button>
+                </p>
+                 <p>
+                    <label for="lifeExpectancyInput" class="font-medium">Life Expectancy (Years):</label>
+                    <input type="number" id="lifeExpectancyInput" min="1" max="150" step="1" class="border border-sky-300 dark:border-sky-700 rounded px-2 py-1 text-sm focus:ring-2 focus:ring-sky-300 focus:outline-none w-16 bg-white dark:bg-slate-800 dark:text-gray-200" value="80">
+                </p>
+            </div>
+        </div>
+        <p class="text-gray-700 dark:text-gray-300 text-center text-sm mt-4">Each box represents one week. <span class="inline-block w-3 h-3 bg-blue-500 rounded-sm mr-1 align-middle"></span>= Weeks passed. Mark significant weeks below!</p>
+    </div>
+
+    <!-- Controls Section -->
+    <div class="controls glass-container">
+        <h2 class="text-2xl font-bold mb-4">Mark Your Weeks</h2>
+        <p class="mb-5 text-sm">Click a week (in Grid/Year view) to select. Ctrl/Cmd+Click or Shift+Click to select multiple.</p>
+        <!-- Legend -->
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-4 gap-y-2 mb-6">
+            <div class="flex items-center"><div class="week-box week-completed mr-2 !w-4 !h-4"></div><span class="text-sm">Completed</span></div>
+            <div class="flex items-center"><div class="week-box week-achievement mr-2 !w-4 !h-4"></div><span class="text-sm">Achievement</span></div>
+            <div class="flex items-center"><div class="week-box week-wasted mr-2 !w-4 !h-4"></div><span class="text-sm">Wasted</span></div>
+            <div class="flex items-center"><div class="week-box week-milestone mr-2 !w-4 !h-4"></div><span class="text-sm">Milestone</span></div>
+            <div class="flex items-center"><div class="week-box week-goal mr-2 !w-4 !h-4"></div><span class="text-sm">Goal</span></div>
+        </div>
+        <!-- Tagging Buttons -->
+        <div class="mb-6">
+            <h3 class="font-semibold mb-2">Tag Selected Week As:</h3>
+            <div class="flex flex-wrap gap-2">
+                <button onclick="tagSelectedWeek('achievement')" class="px-3 py-1.5 bg-green-500 text-white text-sm rounded shadow hover:bg-green-600 active:bg-green-700 transition duration-150"><i class="bi bi-trophy-fill mr-1"></i>Achievement</button>
+                <button onclick="tagSelectedWeek('milestone')" class="px-3 py-1.5 bg-yellow-500 text-white text-sm rounded shadow hover:bg-yellow-600 active:bg-yellow-700 transition duration-150"><i class="bi bi-flag-fill mr-1"></i>Milestone</button>
+                <button onclick="tagSelectedWeek('goal')" class="px-3 py-1.5 bg-purple-500 text-white text-sm rounded shadow hover:bg-purple-600 active:bg-purple-700 transition duration-150"><i class="bi bi-bullseye mr-1"></i>Goal</button>
+                <button onclick="tagSelectedWeek('wasted')" class="px-3 py-1.5 bg-red-500 text-white text-sm rounded shadow hover:bg-red-600 active:bg-red-700 transition duration-150"><i class="bi bi-emoji-frown-fill mr-1"></i>Wasted</button>
+                <button onclick="tagSelectedWeek('completed')" class="px-3 py-1.5 bg-blue-500 text-white text-sm rounded shadow hover:bg-blue-600 active:bg-blue-700 transition duration-150"><i class="bi bi-check-circle-fill mr-1"></i>Completed</button>
+                <button onclick="resetSelectedWeek()" class="px-3 py-1.5 bg-gray-500 text-white text-sm rounded shadow hover:bg-gray-600 active:bg-gray-700 transition duration-150" title="Remove custom tag (reverts to Completed if in the past)"><i class="bi bi-x-circle mr-1"></i>Reset Tag</button>
+                <button id="resetSelectedBtn" onclick="handleResetSelected()" class="px-3 py-1.5 bg-orange-500 text-white text-sm rounded shadow hover:bg-orange-600 active:bg-orange-700 transition duration-150 disabled:opacity-50 disabled:cursor-not-allowed" title="Reset tags for all selected weeks" disabled>
+                    <i class="bi bi-eraser-fill mr-1"></i> Reset All Selected (<span id="multiSelectCount">0</span>)
+                </button>
+            </div>
+        </div>
+        <!-- Note Input -->
+        <div class="mb-6">
+            <h3 class="font-semibold mb-2">Add/Edit Note for Selected Week:</h3>
+            <div class="flex gap-2">
+                <input type="text" id="weekNote" class="border rounded px-3 py-2 flex-grow focus:ring-2 focus:ring-blue-300 focus:outline-none text-sm" placeholder="Select single week to add note...">
+                <button onclick="addNoteToSelectedWeek()" class="px-4 py-2 bg-blue-500 text-white text-sm rounded shadow hover:bg-blue-600 active:bg-blue-700 transition duration-150" title="Save or update the note for the selected week"><i class="bi bi-save mr-1"></i>Save Note</button>
+            </div>
+        </div>
+        <!-- Selected Week Info Panel -->
+        <div id="selectedWeekInfo" class="hidden bg-gray-50 dark:bg-slate-800 p-4 border border-gray-200 dark:border-gray-700 rounded shadow-sm mt-4 transition-all duration-300">
+            <h3 class="font-bold text-lg mb-2 text-blue-700 dark:text-blue-400" id="weekInfoTitle">Week Information</h3>
+            <div id="weekInfoDetails" class="text-gray-700 dark:text-gray-300 text-sm">Select a week on the calendar.</div>
+        </div>
+
+        <!-- Export/Import Section -->
+        <div class="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+             <h3 class="font-semibold mb-3">Data Management</h3>
+             <div class="flex flex-wrap gap-3 items-start">
+                 <button onclick="handleExportData()" class="px-4 py-1.5 bg-indigo-500 text-white text-sm rounded shadow hover:bg-indigo-600 active:bg-indigo-700 transition duration-150">
+                     <i class="bi bi-box-arrow-down mr-1"></i> Export Data
+                 </button>
+                 <button id="importBtn" onclick="triggerImport()" class="px-4 py-1.5 bg-teal-500 dark:bg-teal-600 text-white text-sm rounded shadow hover:bg-teal-600 dark:hover:bg-teal-500 active:bg-teal-700 dark:active:bg-teal-700 transition duration-150">
+                      <i class="bi bi-box-arrow-up mr-1"></i> Import Data
+                 </button>
+                 <input type="file" id="importFile" accept=".json,.txt" class="hidden" onchange="handleImportFile(event)">
+                 <p id="exportReminder" class="text-xs text-gray-500 dark:text-gray-400 italic mt-1 flex-grow basis-full hidden"> <!-- Static reminder text -->
+                     <i class="bi bi-info-circle mr-1"></i>Note: Data saves automatically in *this browser*. Use **Export Data** for backups or moving devices (clearing browser data will erase local data).
+                 </p>
+             </div>
+        </div>
+
+    </div>
+
+    <div class="quote-card"><p class="quote-text">"The future depends on what you do today."</p><p class="quote-author">— Mahatma Gandhi</p></div>
+
+    <!-- Visualization Container -->
+    <div class="visualization-container glass-container overflow-x-auto">
+        <!-- Mobile Scroll Hint -->
+        <div id="scrollHint" class="hidden">
+             <i class="bi bi-arrow-right-short"></i>
+        </div>
+        <!-- View Controls -->
+        <div class="mb-4 flex justify-center items-center gap-2 flex-wrap view-controls">
+             <h3 class="font-semibold mr-2">View:</h3>
+             <button id="viewBtnGrid" onclick="switchToGridView()" class="px-3 py-1 bg-gray-200 text-gray-700 text-sm rounded hover:bg-gray-300 active:bg-gray-400 transition duration-150"><i class="bi bi-grid-3x3-gap-fill mr-1"></i> Grid</button>
+             <button id="viewBtnDecade" onclick="switchToDecadeView()" class="px-3 py-1 bg-gray-200 text-gray-700 text-sm rounded hover:bg-gray-300 active:bg-gray-400 transition duration-150"><i class="bi bi-calendar-date-fill mr-1"></i> Decade</button>
+             <button id="viewBtnYear" onclick="switchToYearView()" class="px-3 py-1 bg-gray-200 text-gray-700 text-sm rounded hover:bg-gray-300 active:bg-gray-400 transition duration-150"><i class="bi bi-calendar3-week-fill mr-1"></i> Year</button>
+             <!-- Year Selector (for Year View) -->
+             <div id="yearSelectorContainer" class="hidden ml-2 mt-2 sm:mt-0">
+                 <label for="yearSelect" class="text-sm font-medium mr-1">Select Year:</label>
+                 <select id="yearSelect" class="border border-gray-300 dark:border-gray-600 rounded px-2 py-1 text-sm focus:ring-2 focus:ring-blue-300 focus:outline-none bg-white dark:bg-slate-800">
+                     <!-- Options added by JS -->
+                 </select>
+             </div>
+        </div>
+
+        <!-- Week Labels Header Placeholder (Populated by JS for Grid/Year) -->
+        <div id="weekLabelsHeaderPlaceholder"></div>
+
+        <!-- Calendar/Visualization Area -->
+        <div id="calendarArea" class="min-h-[300px]">
+            <!-- Content generated by JS based on selected view -->
+        </div>
+    </div>
+
+
+    <div class="quote-card mt-8"><p class="quote-text">"Don't count the days, make the days count."</p><p class="quote-author">— Muhammad Ali</p></div>
+
+    <!-- Stats Container -->
+    <div class="stats-container glass-container mt-8">
+        <h3 class="text-2xl font-bold mb-5">Your Life at a Glance</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div class="stat-card border-blue-500 bg-blue-50 dark:bg-opacity-10 p-5">
+                <div class="flex items-center mb-2"><i class="bi bi-calendar-check text-3xl text-blue-500 dark:text-blue-400 mr-3"></i><h4 class="font-semibold">Weeks Completed</h4></div>
+                <p id="completedWeeks" class="text-3xl font-bold text-blue-600 dark:text-blue-400">0 (0.0%)</p><p class="text-sm mt-1">Weeks lived so far</p>
+            </div>
+            <div class="stat-card border-indigo-500 bg-indigo-50 dark:bg-opacity-10 p-5">
+                <div class="flex items-center mb-2"><i class="bi bi-hourglass-split text-3xl text-indigo-500 dark:text-indigo-400 mr-3"></i><h4 class="font-semibold">Weeks Remaining</h4></div>
+                <p id="remainingWeeks" class="text-3xl font-bold text-indigo-600 dark:text-indigo-400">0 (0.0%)</p><p class="text-sm mt-1">(Based on expectancy)</p>
+            </div>
+            <div class="stat-card border-green-500 bg-green-50 dark:bg-opacity-10 p-5">
+                 <div class="flex items-center mb-2"><i class="bi bi-tags-fill text-3xl text-green-500 dark:text-green-400 mr-3"></i><h4 class="font-semibold">Weeks Tagged</h4></div>
+                <p id="taggedWeeks" class="text-3xl font-bold text-green-600 dark:text-green-400">0 (0.0%)</p><p class="text-sm mt-1">Achievements, Milestones, etc.</p>
+            </div>
+            <div class="stat-card border-yellow-500 bg-yellow-50 dark:bg-opacity-10 p-5">
+                <div class="flex items-center mb-2"><i class="bi bi-journal-text text-3xl text-yellow-600 dark:text-yellow-400 mr-3"></i><h4 class="font-semibold">Weeks with Notes</h4></div>
+                <p id="notedWeeks" class="text-3xl font-bold text-yellow-600 dark:text-yellow-400">0 (0.0%)</p><p class="text-sm mt-1">Documented memories</p>
+            </div>
+        </div>
+    </div>
+
+     <!-- About & How To Use Section -->
+     <div id="aboutSection" class="glass-container text-sm">
+        <h3 class="text-xl font-bold mb-3">About This Tool & How To Use</h3>
+        <p class="mb-2">
+            The "My Life in Weeks" calendar helps you visualize your entire life expectancy as a grid of weeks. Seeing time laid out like this can be a powerful motivator to make each week count. It's a tool for reflection, perspective, and intentional living.
+        </p>
+         <p class="mb-2">
+            It serves as a modern <em class="italic">memento mori</em>, a reminder that our time is finite. This isn't meant to be morbid, but rather a motivator to live more deliberately, making conscious choices about how weeks are spent. By reflecting on each passing week, you build self-awareness. Was it productive? Did you reach a milestone? Did you work towards a goal? Or was it a week that perhaps slipped by? Use this awareness to shape a more fulfilling future.
+         </p>
+         <h4 class="font-semibold mt-4 mb-2 text-base">Quick Guide:</h4>
+         <ul class="list-disc list-inside space-y-1 mb-3 pl-4">
+            <li>Set your correct <strong class="font-semibold">Birth Date</strong> and desired <strong class="font-semibold">Life Expectancy</strong> in the section above the calendar.</li>
+            <li>Click a week box in <strong class="font-semibold">Grid</strong> or <strong class="font-semibold">Year</strong> view to select it (pre-birth weeks cannot be selected).</li>
+            <li>Use the <strong class="font-semibold">Tagging Buttons</strong> and <strong class="font-semibold">Note Input</strong> in the "Mark Your Weeks" section.</li>
+            <li>Use <strong class="font-semibold">Ctrl/Cmd+Click</strong> or <strong class="font-semibold">Shift+Click</strong> to select multiple weeks for bulk resetting.</li>
+            <li>Switch between <strong class="font-semibold">Grid</strong>, <strong class="font-semibold">Decade</strong>, and <strong class="font-semibold">Year</strong> views using the buttons above the calendar.</li>
+            <li>Click your <strong class="font-semibold">Birthday Week</strong> (highlighted in yellow) for a small surprise!</li>
+            <li>Toggle <strong class="font-semibold">Dark/Light Mode</strong> using the <i class="bi bi-moon-stars-fill"></i> / <i class="bi bi-sun-fill"></i> icon in the header.</li>
+            <li>Use <strong class="font-semibold">Export Data</strong> for backups! Your data is saved only in *this* browser's local storage and can be lost if you clear browser data. Use <strong class="font-semibold">Import Data</strong> to restore.</li>
+         </ul>
+         <p class="text-xs italic text-gray-500 dark:text-gray-400">
+            Make every week count!
+         </p>
+    </div>
+
+
+    <!-- Footer -->
+    <footer class="mt-10 text-center pb-10">
+        <p class="text-lg italic">"The best time to plant a tree was 20 years ago. The second best time is now."</p>
+        <p class="mt-2 font-medium">— Chinese Proverb</p>
+        <div class="mt-4 flex justify-center items-center gap-4 text-xs">
+             <a href="mailto:anis76shah56@gmail.com?subject=Life%20Calendar%20Feedback" target="_blank" rel="noopener noreferrer" class="hover:text-sky-300 transition-colors inline-flex items-center" title="Send Feedback via Email">
+                 <i class="bi bi-envelope-fill mr-1 text-lg"></i>
+                 <span class="hidden sm:inline">Send Feedback</span>
+             </a>
+             <span class="text-gray-500 dark:text-gray-600">|</span>
+             <a href="https://wa.me/923109325135" target="_blank" rel="noopener noreferrer" class="hover:text-green-400 transition-colors inline-flex items-center" title="Contact via WhatsApp">
+                 <i class="bi bi-whatsapp mr-1 text-lg"></i>
+                  <span class="hidden sm:inline">Contact via WhatsApp</span>
+             </a>
+        </div>
+        <p class="text-xs mt-4">Life in Weeks Visualizer & Planner</p>
+    </footer>
+
+    <!-- Small Tag Feedback Popup -->
+    <div id="tagFeedbackPopup" class="hidden">
+        <span id="popupIcon" class="bi"></span>
+        <span id="popupText">Tag Added!</span>
+    </div>
+
+    <!-- Centered Feedback Popup -->
+    <div id="centeredFeedbackOverlay">
+        <div class="feedback-content">
+            <span id="centeredFeedbackIcon" class="feedback-icon bi"></span> <!-- JS will add color class -->
+            <p id="centeredFeedbackText" class="feedback-text"></p>
+        </div>
+    </div>
+
+    <!-- REMOVED About Modal HTML -->
+
+
+    <script>
+        // --- Constants & Config ---
+        const DEFAULT_BIRTH_DATE = "2000-01-01";
+        const DEFAULT_LIFE_EXPECTANCY = 80;
+        const WEEKS_PER_YEAR = 52;
+        const MS_PER_WEEK = 7 * 24 * 60 * 60 * 1000;
+        const SMALL_POPUP_DURATION = 2000;
+        const SMALL_POPUP_FADE_OUT_DURATION = 300;
+        const CENTERED_POPUP_DURATION = 1800;
+        const BIRTHDAY_ANIMATION_DURATION = 1500;
+
+        // --- State ---
+        let startDate = new Date(DEFAULT_BIRTH_DATE + "T00:00:00");
+        let lifeExpectancyYears = DEFAULT_LIFE_EXPECTANCY;
+        let totalWeeks = lifeExpectancyYears * WEEKS_PER_YEAR;
+        let completedWeeks = 0; // Actual weeks passed since birth
+        // REMOVED: furthestMarkedWeekPosition
+        let selectedWeekElement = null;
+        let weekData = {};
+        let tagFeedbackTimeoutId = null;
+        let centeredFeedbackTimeoutId = null;
+        let multiSelectedPositions = new Set();
+        let lastSelectedPosition = null;
+        let currentView = 'grid';
+        let currentYearIndex = 0;
+        let currentTheme = 'light'; // Default theme
+        // REMOVED: progressAgeUpdateIntervalId
+
+        // --- DOM Elements ---
+        const birthDateInput = document.getElementById('birthDateInput');
+        const updateBirthDateBtn = document.getElementById('updateBirthDateBtn');
+        const lifeExpectancyInput = document.getElementById('lifeExpectancyInput');
+        const bonusTimeWarning = document.getElementById('bonusTimeWarning');
+        const yearsDisplay = document.getElementById('years');
+        const monthsDisplay = document.getElementById('months');
+        const weeksDisplay = document.getElementById('weeks');
+        const daysDisplay = document.getElementById('days'); // Added Days display
+        const calendarArea = document.getElementById('calendarArea');
+        const selectedWeekInfoBox = document.getElementById('selectedWeekInfo');
+        const weekInfoTitle = document.getElementById('weekInfoTitle');
+        const weekInfoDetails = document.getElementById('weekInfoDetails');
+        const weekNoteInput = document.getElementById('weekNote');
+        const tagFeedbackPopup = document.getElementById('tagFeedbackPopup');
+        const popupIcon = document.getElementById('popupIcon');
+        const popupText = document.getElementById('popupText');
+        const centeredFeedbackOverlay = document.getElementById('centeredFeedbackOverlay');
+        const centeredFeedbackIcon = document.getElementById('centeredFeedbackIcon');
+        const centeredFeedbackText = document.getElementById('centeredFeedbackText');
+        const completedWeeksStat = document.getElementById('completedWeeks');
+        const remainingWeeksStat = document.getElementById('remainingWeeks');
+        const taggedWeeksStat = document.getElementById('taggedWeeks');
+        const notedWeeksStat = document.getElementById('notedWeeks');
+        const resetSelectedBtn = document.getElementById('resetSelectedBtn');
+        const multiSelectCountSpan = document.getElementById('multiSelectCount');
+        const viewBtnGrid = document.getElementById('viewBtnGrid');
+        const viewBtnDecade = document.getElementById('viewBtnDecade');
+        const viewBtnYear = document.getElementById('viewBtnYear');
+        const yearSelectorContainer = document.getElementById('yearSelectorContainer');
+        const yearSelect = document.getElementById('yearSelect');
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
+        const themeToggleIcon = document.getElementById('themeToggleIcon');
+        const importFileInput = document.getElementById('importFile');
+        const exportReminder = document.getElementById('exportReminder');
+        const scrollHint = document.getElementById('scrollHint');
+        const weekLabelsHeaderContainer = document.getElementById('weekLabelsHeaderPlaceholder');
+        const aboutSection = document.getElementById('aboutSection');
+        // REMOVED About Modal Elements
+
+        // --- Inspirational Quotes ---
+        const quotes = [ /* ... quotes array ... */
+            { text: "Your time is limited, don't waste it living someone else's life.", author: "Steve Jobs" }, { text: "The way we spend our time defines who we are.", author: "Jonathan Estrin" }, { text: "Time is the most valuable thing a man can spend.", author: "Theophrastus" }, { text: "Lost time is never found again.", author: "Benjamin Franklin" }, { text: "The trouble is, you think you have time.", author: "Buddha" }, { text: "All we have to decide is what to do with the time that is given us.", author: "J.R.R. Tolkien" }, { text: "Time takes it all, whether you want it to or not.", author: "Stephen King"}, { text: "Either you run the day, or the day runs you.", author: "Jim Rohn"}, { text: "The future is something which everyone reaches at the rate of sixty minutes an hour, whatever he does, whoever he is.", author: "C.S. Lewis"}, { text: "Time flies over us, but leaves its shadow behind.", author: "Nathaniel Hawthorne"}
+        ];
+
+        // --- Core Logic ---
+
+        /** Recalculates totalWeeks based on lifeExpectancyYears */
+        function calculateTotalWeeks() { totalWeeks = lifeExpectancyYears * WEEKS_PER_YEAR; }
+
+        /** Calculates ACTUAL completed weeks AND updates the top age display */
+        function calculateAgeAndCompletedWeeks() {
+            const today = new Date(); today.setHours(0, 0, 0, 0);
+            if (!(startDate instanceof Date) || isNaN(startDate.getTime())) { console.error("Invalid startDate, resetting."); startDate = new Date(DEFAULT_BIRTH_DATE + "T00:00:00"); birthDateInput.value = DEFAULT_BIRTH_DATE; }
+            const birthDate = new Date(startDate); birthDate.setHours(0, 0, 0, 0);
+
+            // Calculate actual age components for display
+            let years = today.getFullYear() - birthDate.getFullYear();
+            let months = today.getMonth() - birthDate.getMonth();
+            let days = today.getDate() - birthDate.getDate();
+
+            if (days < 0) {
+                months--;
+                const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+                days += prevMonth.getDate();
+            }
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+
+            // Calculate completed weeks for grid coloring
+            const diffTime = Math.max(0, today.getTime() - startDate.getTime());
+            completedWeeks = Math.max(0, Math.floor(diffTime / MS_PER_WEEK)); // Update global state
+
+            // Calculate Days Left in current week cycle (7 down to 1)
+            const msIntoThisWeek = diffTime % MS_PER_WEEK;
+            const daysPassedThisWeek = Math.floor(msIntoThisWeek / (24 * 60 * 60 * 1000));
+            const displayDaysLeft = 7 - daysPassedThisWeek;
+
+            // Update the top age display
+            yearsDisplay.textContent = Math.max(0, years);
+            monthsDisplay.textContent = Math.max(0, months);
+            weeksDisplay.textContent = Math.max(0, Math.floor(days / 7)); // Weeks within current month approx
+            daysDisplay.textContent = displayDaysLeft; // Update days display
+
+            // Update year selector based on current age (if needed)
+            const maxValidYearIndex = lifeExpectancyYears - 1;
+            if (years >= 0 && years <= maxValidYearIndex) { currentYearIndex = years; yearSelect.value = years; }
+            else if (years > maxValidYearIndex) { currentYearIndex = maxValidYearIndex; yearSelect.value = maxValidYearIndex; }
+            else { currentYearIndex = 0; yearSelect.value = 0; }
+            checkBonusTime();
+        }
+
+        // REMOVED: findFurthestMarkedWeekPosition, updateProgressAgeDisplay
+
+        /** Checks and displays the bonus time warning */
+        function checkBonusTime() { if (completedWeeks >= totalWeeks && lifeExpectancyYears > 0) { bonusTimeWarning.textContent = `You've already outlived this expectancy — you're in bonus time! 🎉`; bonusTimeWarning.classList.remove('hidden'); } else { bonusTimeWarning.classList.add('hidden'); } }
+        /** Generates the week number labels row (used by Grid and Year views) */
+        function generateWeekLabelsRow() { const l = document.createElement('div'); l.id = 'weekLabelsContainer'; l.className = 'flex flex-grow'; for (let i = 1; i <= WEEKS_PER_YEAR; i++) { const lb = document.createElement('div'); lb.className = 'week-label'; lb.textContent = i; l.appendChild(lb); } return l; }
+        /** Helper: Get the start date of a specific calendar week (1-52) in a year */
+        function getStartDateOfWeek(year, weekNum) { const firstD = new Date(year, 0, 1); const firstDWd = firstD.getDay(); let offset = 1 - firstDWd; if (offset > 1) offset -= 7; const daysToAdd = offset + (weekNum - 1) * 7; const date = new Date(firstD.getTime()); date.setDate(firstD.getDate() + daysToAdd); return date; }
+        /** Helper: Format date as "MMM D, YYYY" */
+        function formatDateForDisplay(date) { if (!(date instanceof Date) || isNaN(date.getTime())) return 'Invalid Date'; return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); }
+        /** Helper: Calculate age in years and months at a specific date */
+        function calculateAgeAtDate(birthDate, targetDate) { if (!(birthDate instanceof Date) || isNaN(birthDate.getTime()) || !(targetDate instanceof Date) || isNaN(targetDate.getTime())) { return { years: 0, months: 0 }; } let years = targetDate.getFullYear() - birthDate.getFullYear(); let months = targetDate.getMonth() - birthDate.getMonth(); let days = targetDate.getDate() - birthDate.getDate(); if (days < 0) { months--; } if (months < 0) { years--; months += 12; } return { years: Math.max(0, years), months: Math.max(0, months) }; }
+
+        /** Generates the standard life grid view (Calendar Year based) */
+        function generateGridView() {
+            calendarArea.innerHTML = ''; weekLabelsHeaderContainer.innerHTML = ''; // Clear placeholder
+            const headerDiv = document.createElement('div'); headerDiv.className = 'sticky-header';
+            const spacer = document.createElement('div'); spacer.className = 'year-label-spacer flex-shrink-0'; headerDiv.appendChild(spacer);
+            headerDiv.appendChild(generateWeekLabelsRow());
+            weekLabelsHeaderContainer.appendChild(headerDiv); // Add header to placeholder
+
+            calendarArea.className = 'grid-view-container'; const f = document.createDocumentFragment();
+            const birthYear = startDate.getFullYear(); const endYear = birthYear + lifeExpectancyYears;
+            for (let currentCalYear = birthYear; currentCalYear < endYear; currentCalYear++) {
+                const currentAgeForLabel = currentCalYear - birthYear;
+                if (currentAgeForLabel > 0 && currentAgeForLabel % 10 === 0) { const dl = document.createElement('div'); dl.className = 'decade-label-container'; dl.innerHTML = `<div class="year-label"></div><div class="decade-label">Age ${currentAgeForLabel}s</div>`; f.appendChild(dl); }
+                const yr = document.createElement('div'); yr.className = 'flex items-center mb-0.5 year-row'; const al = document.createElement('div'); al.className = 'year-label flex items-center justify-end'; al.textContent = `${currentCalYear}`; yr.appendChild(al); const wc = document.createElement('div'); wc.className = 'weeks-grid-container';
+                for (let calendarWeekIndex = 1; calendarWeekIndex <= WEEKS_PER_YEAR; calendarWeekIndex++) { wc.appendChild(createWeekBoxElement(currentCalYear, calendarWeekIndex)); }
+                yr.appendChild(wc); f.appendChild(yr);
+            }
+            calendarArea.appendChild(f); checkScrollHint();
+        }
+        /** Generates the decade overview */
+        function generateDecadeView() { calendarArea.innerHTML = ''; weekLabelsHeaderContainer.innerHTML = ''; calendarArea.className = 'decade-view-container'; const f = document.createDocumentFragment(); let currentDecade = -1; let decadeRow; const birthYear = startDate.getFullYear(); const endYear = birthYear + lifeExpectancyYears; for (let currentCalYear = birthYear; currentCalYear < endYear; currentCalYear++) { const ageAtYearStart = currentCalYear - birthYear; const yearIndex = ageAtYearStart; const decade = Math.floor(ageAtYearStart / 10); if (decade !== currentDecade) { currentDecade = decade; if (currentDecade >= 0) { const sep = document.createElement('div'); sep.className = 'decade-separator'; sep.innerHTML = `<span>Age ${currentDecade * 10}s</span>`; f.appendChild(sep); } decadeRow = document.createElement('div'); decadeRow.className = 'decade-row'; f.appendChild(decadeRow); } const yb = document.createElement('div'); yb.className = 'year-block'; yb.textContent = `${currentCalYear}`; yb.dataset.yearIndex = yearIndex; yb.dataset.calendarYear = currentCalYear; const ys = yearIndex * WEEKS_PER_YEAR; const ye = ys + WEEKS_PER_YEAR - 1; let yt = false; const absStartPos = Math.max(0, Math.floor((new Date(currentCalYear, 0, 1).getTime() - startDate.getTime()) / MS_PER_WEEK)); const absEndPos = absStartPos + WEEKS_PER_YEAR; if (ye < completedWeeks) yb.classList.add('past'); for (let i = absStartPos; i < absEndPos && i < totalWeeks; i++) { if (weekData[i] && ((weekData[i].type && weekData[i].type !== 'completed') || weekData[i].note)) { yt = true; break; } } if (yt) { yb.classList.add('tagged'); yb.title = `Year ${currentCalYear} contains tags/notes.`; } else yb.title = `Year ${currentCalYear}`; yb.addEventListener('click', () => switchToYearView(yearIndex)); decadeRow.appendChild(yb); } calendarArea.appendChild(f); checkScrollHint(); }
+        /** Generates the view for a single year */
+        function generateYearView(yearIndex) {
+            calendarArea.innerHTML = ''; weekLabelsHeaderContainer.innerHTML = '';
+            calendarArea.className = 'year-view-container';
+            const f = document.createDocumentFragment();
+            const calendarYear = startDate.getFullYear() + yearIndex; const age = yearIndex + 1;
+            const h = document.createElement('div'); h.className = 'year-view-header'; h.textContent = `Year ${calendarYear} (Age ${age})`; f.appendChild(h);
+            // Create Row for Labels (Not sticky in year view)
+            const labelsRow = document.createElement('div'); labelsRow.className = 'flex mb-1 year-view-labels';
+            const labelSpacer = document.createElement('div'); labelSpacer.className = 'year-label-spacer flex-shrink-0'; labelsRow.appendChild(labelSpacer);
+            labelsRow.appendChild(generateWeekLabelsRow()); f.appendChild(labelsRow);
+            // Create Row for Year Label + Week Boxes
+            const yr = document.createElement('div'); yr.className = 'flex items-center year-view-grid-row'; const al = document.createElement('div'); al.className = 'year-label flex items-center justify-end'; al.textContent = `${calendarYear}`; yr.appendChild(al); const wc = document.createElement('div'); wc.className = 'weeks-grid-container';
+            for (let calendarWeekIndex = 1; calendarWeekIndex <= WEEKS_PER_YEAR; calendarWeekIndex++) { wc.appendChild(createWeekBoxElement(calendarYear, calendarWeekIndex)); }
+            yr.appendChild(wc); f.appendChild(yr);
+            calendarArea.appendChild(f); checkScrollHint();
+        }
+
+        /** Helper to create a single week box element */
+        function createWeekBoxElement(calendarYear, calendarWeekIndex) {
+            const wb = document.createElement('div'); wb.className = 'week-box';
+            const weekStartDate = getStartDateOfWeek(calendarYear, calendarWeekIndex);
+            const weekEndDate = new Date(weekStartDate.getTime() + (6 * 24 * 60 * 60 * 1000));
+            let absoluteWeekPosition = -1;
+            if (weekStartDate >= startDate) { absoluteWeekPosition = Math.floor((weekStartDate.getTime() - startDate.getTime()) / MS_PER_WEEK); }
+            wb.dataset.position = absoluteWeekPosition; wb.dataset.calendarYear = calendarYear; wb.dataset.calendarWeek = calendarWeekIndex;
+            const today = new Date(); today.setHours(0,0,0,0); let status = 'future'; let isBirthdayWeek = false;
+            if (weekEndDate < startDate) { status = 'pre-birth'; }
+            // Check completedWeeks (actual time passed) FIRST
+            else if (absoluteWeekPosition >= 0 && absoluteWeekPosition < completedWeeks) { status = 'completed'; }
+            const birthMonth = startDate.getMonth(); const birthDay = startDate.getDate(); let tempDate = new Date(weekStartDate);
+            for (let i = 0; i < 7; i++) { if (tempDate.getMonth() === birthMonth && tempDate.getDate() === birthDay) { isBirthdayWeek = true; break; } tempDate.setDate(tempDate.getDate() + 1); }
+            if (status === 'pre-birth') { wb.classList.add('week-pre-birth'); } else if (status === 'completed') { wb.classList.add('week-completed'); }
+            const data = (absoluteWeekPosition >= 0 && absoluteWeekPosition < totalWeeks) ? weekData[absoluteWeekPosition] : null;
+            if (status !== 'pre-birth' && data && data.type) { wb.classList.remove('week-completed'); wb.classList.add('week-' + data.type); }
+            if (isBirthdayWeek && status !== 'pre-birth') { wb.classList.add('birthday-week'); }
+            let title = `Year ${calendarYear}, Week ${calendarWeekIndex}\n(${formatDateForDisplay(weekStartDate)} - ${formatDateForDisplay(weekEndDate)})`;
+            if (status === 'pre-birth') { title += '\n👶 Not born yet'; }
+            else if (isBirthdayWeek) { const ageTurned = calendarYear - startDate.getFullYear(); title += `\n🎉 Birthday Week (Turned ${ageTurned})`; }
+            if (data && data.note) { title += `\nNote: ${data.note}`; }
+            wb.title = title;
+            if (status !== 'pre-birth') { wb.addEventListener('click', handleWeekClick); } else { wb.style.cursor = 'default'; }
+            return wb;
+        }
+
+        /** Handles clicking on a week box */
+        function handleWeekClick(event) { if (currentView === 'decade') return; const cwb = event.currentTarget; if (cwb.classList.contains('week-pre-birth')) return; const pos = parseInt(cwb.dataset.position); const ctrl = event.ctrlKey || event.metaKey; const shift = event.shiftKey; if (!ctrl && !shift && cwb.classList.contains('birthday-week')) { triggerBirthdayAnimation(cwb); } if (ctrl) { event.preventDefault(); clearSingleSelection(); if (multiSelectedPositions.has(pos)) { multiSelectedPositions.delete(pos); cwb.classList.remove('multi-selected'); } else { multiSelectedPositions.add(pos); cwb.classList.add('multi-selected'); } lastSelectedPosition = pos; updateMultiSelectUI(); } else if (shift && lastSelectedPosition !== null) { event.preventDefault(); clearSingleSelection(); const startPos = Math.min(pos, lastSelectedPosition); const endPos = Math.max(pos, lastSelectedPosition); for (let i = startPos; i <= endPos; i++) { if (i >= 0) { multiSelectedPositions.add(i); const box = calendarArea.querySelector(`.week-box[data-position="${i}"]`); if (box && !box.classList.contains('week-pre-birth')) { box.classList.add('multi-selected'); } else { multiSelectedPositions.delete(i); } } } updateMultiSelectUI(); } else { clearMultiSelection(); if (selectedWeekElement && selectedWeekElement !== cwb) { selectedWeekElement.style.outline = ''; selectedWeekElement.style.zIndex = ''; } selectedWeekElement = cwb; selectedWeekElement.style.outline = '2px solid var(--color-gray-800)'; selectedWeekElement.style.outlineOffset = '1px'; selectedWeekElement.style.zIndex = '20'; showWeekInfo(selectedWeekElement); lastSelectedPosition = pos; } }
+        /** Triggers the birthday animation */
+        function triggerBirthdayAnimation(boxElement) { const agePopup = document.createElement('span'); const ageTurned = parseInt(boxElement.dataset.calendarYear) - startDate.getFullYear(); agePopup.innerHTML = `🎉 ${ageTurned}`; agePopup.classList.add('age-popup'); const rect = boxElement.getBoundingClientRect(); const popupTop = rect.top + window.scrollY - 15; const popupLeft = rect.left + window.scrollX + (rect.width / 2); agePopup.style.top = `${popupTop}px`; agePopup.style.left = `${popupLeft}px`; document.body.appendChild(agePopup); setTimeout(() => { if (agePopup) { agePopup.remove(); } }, BIRTHDAY_ANIMATION_DURATION); }
+        /** Clears single selection UI */
+        function clearSingleSelection() { if (selectedWeekElement) { selectedWeekElement.style.outline = ''; selectedWeekElement.style.zIndex = ''; selectedWeekElement = null; selectedWeekInfoBox.classList.add('hidden'); weekNoteInput.value = ''; weekNoteInput.placeholder = "Select single week to add note..."; } }
+        /** Clears multi selection state and UI */
+        function clearMultiSelection() { if (multiSelectedPositions.size > 0) { calendarArea.querySelectorAll('.week-box.multi-selected').forEach(b => b.classList.remove('multi-selected')); multiSelectedPositions.clear(); updateMultiSelectUI(); lastSelectedPosition = null; } }
+        /** Updates the multi-select button state and count */
+        function updateMultiSelectUI() { const count = multiSelectedPositions.size; multiSelectCountSpan.textContent = count; resetSelectedBtn.disabled = count === 0 || currentView === 'decade'; }
+        /** Displays information about the selected week in the info panel */
+        function showWeekInfo(weekElement) {
+            if (!weekElement || weekElement.classList.contains('week-pre-birth')) { selectedWeekInfoBox.classList.add('hidden'); return; }
+            const pos = parseInt(weekElement.dataset.position); const calYear = weekElement.dataset.calendarYear; const calWeek = weekElement.dataset.calendarWeek; const data = weekData[pos];
+            weekInfoTitle.textContent = `Details for Year ${calYear}, Week ${calWeek}`;
+            const weekStartDate = getStartDateOfWeek(parseInt(calYear), parseInt(calWeek)); const weekEndDate = new Date(weekStartDate.getTime() + (6 * 24 * 60 * 60 * 1000));
+            const formattedStartDate = formatDateForDisplay(weekStartDate); const formattedEndDate = formatDateForDisplay(weekEndDate); const dateRangeText = `(${formattedStartDate} - ${formattedEndDate})`;
+            const ageAtWeek = calculateAgeAtDate(startDate, weekStartDate); const ageText = `${Math.max(0, ageAtWeek.years)} years, ${Math.max(0, ageAtWeek.months)} months old`;
+            let ic = ''; let st = 'Future Week'; let sc = currentTheme === 'dark' ? 'text-gray-400' : 'text-gray-600'; const cl = weekElement.classList; let isBirthday = false;
+            if (cl.contains('week-completed')) { st = 'Completed'; sc = currentTheme === 'dark' ? 'text-blue-400' : 'text-blue-600'; } if (cl.contains('week-achievement')) { st = 'Achievement'; sc = currentTheme === 'dark' ? 'text-green-400' : 'text-green-600'; } if (cl.contains('week-wasted')) { st = 'Wasted'; sc = currentTheme === 'dark' ? 'text-red-400' : 'text-red-600'; } if (cl.contains('week-milestone')) { st = 'Milestone'; sc = currentTheme === 'dark' ? 'text-yellow-400' : 'text-yellow-600'; } if (cl.contains('week-goal')) { st = 'Goal'; sc = currentTheme === 'dark' ? 'text-purple-400' : 'text-purple-600'; } if (cl.contains('birthday-week')) { isBirthday = true; }
+            ic += `<p><strong>Date Range:</strong> ${dateRangeText}</p>`; ic += `<p><strong>Age at this time:</strong> ${ageText}</p>`;
+            if (isBirthday) { const ageTurned = parseInt(calYear) - startDate.getFullYear(); ic += `<p><strong><i class="bi bi-cake2-fill text-yellow-500"></i> Birthday!</strong> (Turned ${ageTurned})</p>`; }
+            ic += `<p><strong>Status:</strong> <span class="font-medium ${sc}">${st}</span></p>`;
+            if (data && data.note) { const np = document.createElement('p'); np.innerHTML = '<strong>Note:</strong> '; np.appendChild(document.createTextNode(data.note)); ic += np.outerHTML; } else { ic += `<p class="text-gray-500 dark:text-gray-400 italic">No note added for this week.</p>`; }
+            const rq = quotes[Math.floor(Math.random() * quotes.length)]; ic += `<div class="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700"><em class="text-sm text-blue-600 dark:text-blue-400">"${rq.text}"</em><p class="text-xs text-right text-gray-500 dark:text-gray-400 mt-1">— ${rq.author}</p></div>`;
+            weekInfoDetails.innerHTML = ic; selectedWeekInfoBox.classList.remove('hidden');
+            weekNoteInput.value = (data && data.note) ? data.note : ''; weekNoteInput.placeholder = `Add note for Year ${calYear}, Week ${calWeek}...`;
+        }
+        /** Helper to get Tailwind text color class */
+        function getTypeColorClass(type) { const map = { 'achievement': 'text-green-600 dark:text-green-400', 'wasted': 'text-red-600 dark:text-red-400', 'milestone': 'text-yellow-600 dark:text-yellow-400', 'goal': 'text-purple-600 dark:text-purple-400', 'completed': 'text-blue-600 dark:text-blue-400', 'future': 'text-gray-600 dark:text-gray-400' }; return map[type] || 'text-gray-600 dark:text-gray-400'; }
+
+
+        /** Shows the small feedback popup near the selected week. */
+        function showTagFeedback(type) { if (!selectedWeekElement || currentView === 'decade') return; if (tagFeedbackTimeoutId) { clearTimeout(tagFeedbackTimeoutId); tagFeedbackPopup.className = 'hidden'; requestAnimationFrame(() => proceedWithSmallPopup(type)); } else { proceedWithSmallPopup(type); } }
+        function proceedWithSmallPopup(type) { let i = '', m = '', c = '', pT = `type-${type}`; const fT = { 'achievement': { i: 'bi-stars', m: 'Achieved!', c: 'text-green-400' }, 'milestone': { i: 'bi-flag-fill', m: 'Milestone!', c: 'text-yellow-400' }, 'goal': { i: 'bi-bullseye', m: 'Goal Set!', c: 'text-purple-400' }, 'wasted': { i: 'bi-emoji-expressionless-fill', m: 'Wasted.', c: 'text-red-400' } }; if (!fT[type]) return; const cfg = fT[type]; i = cfg.i; m = cfg.m; c = cfg.c; popupIcon.className = `bi ${i} ${c}`; popupText.textContent = m; tagFeedbackPopup.className = `tagFeedbackPopup ${pT}`; const rect = selectedWeekElement.getBoundingClientRect(); const pS = window.getComputedStyle(tagFeedbackPopup); const pH = parseFloat(pS.height) || 50; const pW = tagFeedbackPopup.offsetWidth || 150; let pTop = window.scrollY + rect.top - pH - 15; let pL = window.scrollX + rect.left + (rect.width / 2) - (pW / 2); if (pTop < window.scrollY + 10) pTop = window.scrollY + rect.bottom + 15; pL = Math.max(window.scrollX + 10, Math.min(pL, window.innerWidth + window.scrollX - pW - 10)); tagFeedbackPopup.style.top = `${pTop}px`; tagFeedbackPopup.style.left = `${pL}px`; requestAnimationFrame(() => { tagFeedbackPopup.classList.add('show'); }); tagFeedbackTimeoutId = setTimeout(() => { tagFeedbackPopup.classList.add('hide'); tagFeedbackTimeoutId = setTimeout(() => { tagFeedbackPopup.className = 'hidden'; tagFeedbackTimeoutId = null; }, SMALL_POPUP_FADE_OUT_DURATION); }, SMALL_POPUP_DURATION); }
+
+        /** Shows the centered feedback overlay */
+        function showCenteredFeedback(type) { if (centeredFeedbackTimeoutId) { clearTimeout(centeredFeedbackTimeoutId); centeredFeedbackOverlay.classList.remove('visible'); centeredFeedbackIcon.className = 'feedback-icon bi'; requestAnimationFrame(() => proceedWithCenteredPopup(type)); } else { proceedWithCenteredPopup(type); } }
+        function proceedWithCenteredPopup(type) {
+            const feedbackTypes = {
+                'achievement': { i: 'bi-trophy-fill', m: 'Achievement Unlocked!', lightColor: 'text-green-500', darkColor: 'text-green-400', a: 'animate-achievement' },
+                'milestone': { i: 'bi-flag-fill', m: 'Milestone Reached!', lightColor: 'text-yellow-500', darkColor: 'text-yellow-400', a: 'animate-milestone' },
+                'goal': { i: 'bi-bullseye', m: 'Focused Goal Set', lightColor: 'text-purple-500', darkColor: 'text-purple-400', a: 'animate-goal' },
+                'wasted': { i: 'bi-emoji-frown-fill', m: 'Week Wasted...', lightColor: 'text-red-500', darkColor: 'text-red-400', a: 'animate-wasted' }
+            };
+            if (!feedbackTypes[type]) return;
+            const cfg = feedbackTypes[type];
+            const colorClass = (currentTheme === 'dark') ? cfg.darkColor : cfg.lightColor;
+            centeredFeedbackIcon.className = `feedback-icon bi ${cfg.i} ${colorClass}`;
+            if (cfg.a) { centeredFeedbackIcon.classList.add(cfg.a); }
+            centeredFeedbackText.textContent = cfg.m;
+            centeredFeedbackOverlay.style.setProperty('--popup-duration', `${CENTERED_POPUP_DURATION}ms`);
+            centeredFeedbackOverlay.style.animation = 'none'; void centeredFeedbackOverlay.offsetWidth; centeredFeedbackOverlay.style.animation = '';
+            centeredFeedbackOverlay.classList.add('visible');
+            centeredFeedbackTimeoutId = setTimeout(() => { centeredFeedbackOverlay.classList.remove('visible'); if (cfg.a) centeredFeedbackIcon.classList.remove(cfg.a); centeredFeedbackTimeoutId = null; }, CENTERED_POPUP_DURATION);
+        }
+
+        /** Tags the *single* selected week with the given type. */
+        function tagSelectedWeek(type) { if (!selectedWeekElement || currentView === 'decade' || selectedWeekElement.classList.contains('week-pre-birth')) { alert("Please select a valid week in Grid or Year view!"); return; } if (multiSelectedPositions.size > 0) { alert("Clear multi-selection before tagging a single week."); return; } const position = parseInt(selectedWeekElement.dataset.position); if (position < 0) return; if (!weekData[position]) weekData[position] = {}; weekData[position].type = type; selectedWeekElement.classList.remove('week-completed', 'week-achievement', 'week-wasted', 'week-milestone', 'week-goal'); selectedWeekElement.classList.add('week-' + type); showTagFeedback(type); showCenteredFeedback(type); showWeekInfo(selectedWeekElement); updateStats(); /* Age display updates separately */ saveDataToLocalStorage(); }
+
+        /** Resets the tag of the *single* selected week. */
+        function resetSelectedWeek() { if (!selectedWeekElement || currentView === 'decade' || selectedWeekElement.classList.contains('week-pre-birth')) { alert("Please select a valid week in Grid or Year view!"); return; } if (multiSelectedPositions.size > 0) { alert("Clear multi-selection first."); return; } const pos = parseInt(selectedWeekElement.dataset.position); if (pos < 0) return; if (resetWeekBox(pos, selectedWeekElement)) { updateStats(); /* Age display updates separately */ saveDataToLocalStorage(); } showWeekInfo(selectedWeekElement); }
+        /** Handles resetting MULTIPLE selected weeks */
+        function handleResetSelected() { const count = multiSelectedPositions.size; if (count === 0 || currentView === 'decade') return; if (!confirm(`Reset tags for ${count} selected week(s)? Notes kept.`)) return; let changed = false; multiSelectedPositions.forEach(pos => { if (pos >= 0) { const box = calendarArea.querySelector(`.week-box[data-position="${pos}"]`); if (box && !box.classList.contains('week-pre-birth')) { if (resetWeekBox(pos, box)) changed = true; box.classList.remove('multi-selected'); } } }); multiSelectedPositions.clear(); updateMultiSelectUI(); lastSelectedPosition = null; if (changed) { updateStats(); /* Age display updates separately */ saveDataToLocalStorage(); console.log(`${count} week(s) reset.`); } }
+        /** Resets a single week box's tag */
+        function resetWeekBox(position, weekElement) { let changed = false; if (weekData[position]) { if (weekData[position].type) { delete weekData[position].type; changed = true; } } weekElement.classList.remove('week-achievement', 'week-wasted', 'week-milestone', 'week-goal', 'week-completed', 'birthday-week'); const weekStartDate = getStartDateOfWeek(parseInt(weekElement.dataset.calendarYear), parseInt(weekElement.dataset.calendarWeek)); const today = new Date(); today.setHours(0,0,0,0); if (weekStartDate < today) { weekElement.classList.add('week-completed'); } const birthMonth = startDate.getMonth(); const birthDay = startDate.getDate(); let tempDate = new Date(weekStartDate); let isBirthday = false; for (let i = 0; i < 7; i++) { if (tempDate.getMonth() === birthMonth && tempDate.getDate() === birthDay) { isBirthday = true; break; } tempDate.setDate(tempDate.getDate() + 1); } if (isBirthday) weekElement.classList.add('birthday-week'); let title = `Year ${weekElement.dataset.calendarYear}, Week ${weekElement.dataset.calendarWeek}\n(${formatDateForDisplay(weekStartDate)} - ${formatDateForDisplay(new Date(weekStartDate.getTime() + (6 * 24 * 60 * 60 * 1000)))})`; if (isBirthday) { const ageTurned = parseInt(weekElement.dataset.calendarYear) - startDate.getFullYear(); title += `\n🎉 Birthday Week (Turned ${ageTurned})`; } if (weekData[position] && weekData[position].note) title += `\nNote: ${weekData[position].note}`; weekElement.title = title; return changed; }
+        /** Adds or updates the note for the *single* selected week. */
+        function addNoteToSelectedWeek() { if (!selectedWeekElement || currentView === 'decade' || selectedWeekElement.classList.contains('week-pre-birth')) { alert("Please select a valid week in Grid or Year view!"); return; } if (multiSelectedPositions.size > 0) { alert("Clear multi-selection first."); return; } const pos = parseInt(selectedWeekElement.dataset.position); if (pos < 0) return; const note = weekNoteInput.value.trim(); let msg = ""; let changed = false; if (!weekData[pos]) { if (note !== '') { weekData[pos] = { note: note }; msg = "Note saved."; changed = true; } else { msg = "No note to add/remove."; } } else { if (note === '') { if (weekData[pos].note) { delete weekData[pos].note; msg = "Note removed."; changed = true; if (!weekData[pos].type) delete weekData[pos]; } else { msg = "No note to remove."; } } else { if (weekData[pos].note !== note) { weekData[pos].note = note; msg = "Note updated."; changed = true; } else { msg = "Note unchanged."; } } } let title = `Year ${selectedWeekElement.dataset.calendarYear}, Week ${selectedWeekElement.dataset.calendarWeek}`; const weekStartDate = getStartDateOfWeek(parseInt(selectedWeekElement.dataset.calendarYear), parseInt(selectedWeekElement.dataset.calendarWeek)); const weekEndDate = new Date(weekStartDate.getTime() + (6 * 24 * 60 * 60 * 1000)); title += `\n(${formatDateForDisplay(weekStartDate)} - ${formatDateForDisplay(weekEndDate)})`; if (selectedWeekElement.classList.contains('birthday-week')) { const ageTurned = parseInt(selectedWeekElement.dataset.calendarYear) - startDate.getFullYear(); title += `\n🎉 Birthday Week (Turned ${ageTurned})`; } if (weekData[pos] && weekData[pos].note) title += `\nNote: ${weekData[pos].note}`; selectedWeekElement.title = title; if (changed) { updateStats(); /* Age display updates separately */ saveDataToLocalStorage(); console.log(msg); } showWeekInfo(selectedWeekElement); }
+
+        /** Recalculates and updates the statistics display. */
+        function updateStats() { let taggedCount = 0, notedCount = 0; const today = new Date(); today.setHours(0,0,0,0); const actualCompletedWeeks = Math.max(0, Math.floor((today.getTime() - startDate.getTime()) / MS_PER_WEEK)); /* Use actual completed weeks here */ let effectiveCompletedCount = 0; for (let pos = 0; pos < totalWeeks; pos++) { const data = weekData[pos]; const weekStartDate = new Date(startDate.getTime() + (pos * MS_PER_WEEK)); if (weekStartDate >= startDate) { if (weekStartDate < today) { effectiveCompletedCount++; } if (data && data.type && data.type !== 'completed') taggedCount++; if (data && data.note) notedCount++; } } effectiveCompletedCount = Math.min(effectiveCompletedCount, totalWeeks); const remainingCount = Math.max(0, totalWeeks - actualCompletedWeeks); const formatPercent = (count) => totalWeeks > 0 ? (count / totalWeeks * 100).toFixed(1) : '0.0'; completedWeeksStat.textContent = `${actualCompletedWeeks.toLocaleString()} (${formatPercent(actualCompletedWeeks)}%)`; remainingWeeksStat.textContent = `${remainingCount.toLocaleString()} (${formatPercent(remainingCount)}%)`; taggedWeeksStat.textContent = `${taggedCount.toLocaleString()} (${formatPercent(taggedCount)}%)`; notedWeeksStat.textContent = `${notedCount.toLocaleString()} (${formatPercent(notedCount)}%)`; checkBonusTime(); }
+
+        // --- Data Export/Import ---
+        function handleExportData() { try { const dataToExport = { birthDate: startDate.toISOString().split('T')[0], lifeExpectancy: lifeExpectancyYears, theme: currentTheme, weekData: weekData }; const jsonString = JSON.stringify(dataToExport, null, 2); const blob = new Blob([jsonString], { type: 'application/json' }); const url = URL.createObjectURL(blob); const link = document.createElement('a'); link.href = url; const dateStr = new Date().toISOString().split('T')[0]; link.download = `life-calendar-data-${dateStr}.json`; document.body.appendChild(link); link.click(); document.body.removeChild(link); URL.revokeObjectURL(url); localStorage.setItem('lastExportTimestamp', Date.now().toString()); checkExportReminder(); alert('Data exported successfully! Keep this file safe.'); } catch (e) { console.error("Error exporting data:", e); alert("Could not export data."); } }
+        function triggerImport() { importFileInput.click(); }
+        function handleImportFile(event) { const file = event.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = function(e) { try { const importedData = JSON.parse(e.target.result); if (!importedData || typeof importedData !== 'object') throw new Error("Invalid file format."); if (!importedData.birthDate || !/^\d{4}-\d{2}-\d{2}$/.test(importedData.birthDate)) throw new Error("Missing or invalid birth date."); if (!importedData.lifeExpectancy || !Number.isInteger(importedData.lifeExpectancy) || importedData.lifeExpectancy < 1) throw new Error("Missing or invalid life expectancy."); if (!importedData.weekData || typeof importedData.weekData !== 'object') throw new Error("Missing or invalid week data."); if (importedData.theme && !['light', 'dark'].includes(importedData.theme)) console.warn("Imported theme value invalid, using default."); if (!confirm("Importing will overwrite current data. Are you sure?")) { importFileInput.value = ''; return; } startDate = new Date(importedData.birthDate + "T00:00:00"); lifeExpectancyYears = importedData.lifeExpectancy; currentTheme = ['light', 'dark'].includes(importedData.theme) ? importedData.theme : 'light'; weekData = importedData.weekData; birthDateInput.value = startDate.toISOString().split('T')[0]; lifeExpectancyInput.value = lifeExpectancyYears; applyTheme(currentTheme); calculateTotalWeeks(); populateYearSelector(); calculateAgeAndCompletedWeeks(); /* Recalculates actual age */ refreshCurrentView(); updateStats(); saveDataToLocalStorage(); localStorage.removeItem('lastExportTimestamp'); checkExportReminder(); alert('Data imported successfully!'); } catch (error) { console.error("Error importing file:", error); alert(`Import failed: ${error.message}`); } finally { importFileInput.value = ''; } }; reader.onerror = function(e) { console.error("Error reading file:", e); alert("Failed to read file."); importFileInput.value = ''; }; reader.readAsText(file); }
+        /** Shows the export reminder text */
+        function checkExportReminder() { if(exportReminder) exportReminder.classList.remove('hidden'); }
+
+
+        // --- Local Storage ---
+        function saveDataToLocalStorage() { try { const d = { birthDate: startDate.toISOString().split('T')[0], lifeExpectancy: lifeExpectancyYears, theme: currentTheme, weekData: weekData }; localStorage.setItem('lifeCalendarData', JSON.stringify(d)); console.log("Data saved."); } catch (e) { console.error("Error saving data:", e); alert("Could not save data."); } }
+        function loadDataFromLocalStorage() { const s = localStorage.getItem('lifeCalendarData'); let l = DEFAULT_BIRTH_DATE; let le = DEFAULT_LIFE_EXPECTANCY; let lt = 'light'; if (s) { try { const p = JSON.parse(s); if (p.weekData && typeof p.weekData === 'object') weekData = p.weekData; else weekData = {}; if (p.birthDate && /^\d{4}-\d{2}-\d{2}$/.test(p.birthDate)) l = p.birthDate; if (p.lifeExpectancy && Number.isInteger(p.lifeExpectancy) && p.lifeExpectancy > 0) le = p.lifeExpectancy; if (p.theme === 'dark' || p.theme === 'light') lt = p.theme; } catch (e) { console.error("Error parsing data:", e); weekData = {}; le = DEFAULT_LIFE_EXPECTANCY; lt = 'light'; } } birthDateInput.value = l; startDate = new Date(l + "T00:00:00"); lifeExpectancyInput.value = le; lifeExpectancyYears = le; calculateTotalWeeks(); currentTheme = lt; /* Load theme preference state */ console.log("Data loaded."); } // Theme is applied separately in init
+
+        // --- View Switching Logic ---
+        function updateViewControls() { viewBtnGrid.classList.toggle('active', currentView === 'grid'); viewBtnDecade.classList.toggle('active', currentView === 'decade'); viewBtnYear.classList.toggle('active', currentView === 'year'); yearSelectorContainer.classList.toggle('hidden', currentView !== 'year'); const isInteractive = currentView === 'grid' || currentView === 'year'; weekNoteInput.disabled = !isInteractive; document.querySelectorAll('.controls button').forEach(btn => { if (btn.id !== 'resetSelectedBtn') btn.disabled = !isInteractive; else updateMultiSelectUI(); }); if (!isInteractive) { clearSingleSelection(); clearMultiSelection(); } checkScrollHint(); /* Check scroll hint on view change */ }
+        function switchToGridView() { if (currentView === 'grid') return; currentView = 'grid'; clearSingleSelection(); clearMultiSelection(); generateGridView(); updateViewControls(); }
+        function switchToDecadeView() { if (currentView === 'decade') return; currentView = 'decade'; clearSingleSelection(); clearMultiSelection(); generateDecadeView(); updateViewControls(); }
+        function switchToYearView(yearIndex = -1) { if (yearIndex === -1) yearIndex = parseInt(yearSelect.value); if (isNaN(yearIndex) || yearIndex < 0 || yearIndex >= lifeExpectancyYears) yearIndex = currentYearIndex; currentView = 'year'; currentYearIndex = yearIndex; yearSelect.value = yearIndex; clearSingleSelection(); clearMultiSelection(); generateYearView(currentYearIndex); updateViewControls(); }
+
+        // --- Theme Toggling ---
+        function applyTheme(theme) { if (theme === 'dark') { document.documentElement.classList.add('dark'); themeToggleIcon.classList.replace('bi-moon-stars-fill', 'bi-sun-fill'); themeToggleBtn.title = "Switch to Light Mode"; } else { document.documentElement.classList.remove('dark'); themeToggleIcon.classList.replace('bi-sun-fill', 'bi-moon-stars-fill'); themeToggleBtn.title = "Switch to Dark Mode"; } currentTheme = theme; }
+        function toggleTheme() { const newTheme = currentTheme === 'light' ? 'dark' : 'light'; applyTheme(newTheme); try { localStorage.setItem('lifeCalendarTheme', newTheme); console.log("Theme preference saved:", newTheme); } catch (e) { console.error("Could not save theme preference:", e); } }
+        function loadThemePreference() { let preferredTheme = 'light'; try { const savedTheme = localStorage.getItem('lifeCalendarTheme'); if (savedTheme) { preferredTheme = savedTheme; console.log("Loaded theme preference:", preferredTheme); } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) { preferredTheme = 'dark'; console.log("Using system dark preference"); } } catch (e) { console.error("Could not load theme preference:", e); } applyTheme(preferredTheme); }
+
+        // --- Mobile Scroll Hint ---
+        function checkScrollHint() {
+            requestAnimationFrame(() => { // Ensure layout is calculated
+                const container = document.querySelector('.visualization-container');
+                if (!container || !scrollHint) return; // Check if elements exist
+                // Show hint only below 768px and if content overflows
+                if (window.innerWidth < 768 && container.scrollWidth > container.clientWidth) {
+                    scrollHint.classList.remove('hidden');
+                    scrollHint.classList.add('visible');
+                    // Hide hint after a few seconds
+                    setTimeout(() => {
+                        scrollHint.classList.remove('visible');
+                        // Add hidden back after fade out transition
+                         setTimeout(() => { scrollHint.classList.add('hidden'); }, 500);
+                    }, 3000); // Show for 3 seconds
+                } else {
+                    scrollHint.classList.add('hidden');
+                    scrollHint.classList.remove('visible');
+                }
+            });
+        }
+
+        // REMOVED About Modal Logic Functions
+
+        // --- Event Listeners ---
+        /** Handles birth date update */
+        function handleUpdateBirthDate() { const dV = birthDateInput.value; if (!/^\d{4}-\d{2}-\d{2}$/.test(dV)) { alert("Invalid date format."); birthDateInput.value = startDate.toISOString().split('T')[0]; return; } const nD = new Date(dV + "T00:00:00"); if (!isNaN(nD.getTime())) { startDate = nD; calculateAgeAndCompletedWeeks(); /* Update age display */ populateYearSelector(); refreshCurrentView(); updateStats(); saveDataToLocalStorage(); console.log("Birth date updated."); } else { alert("Invalid date value."); birthDateInput.value = startDate.toISOString().split('T')[0]; } }
+        /** Handles changes to the life expectancy input */
+        function handleExpectancyChange() { const newE = parseInt(lifeExpectancyInput.value); if (isNaN(newE) || newE < 1 || newE > 150) { alert("Please enter a valid life expectancy (e.g., 1-150)."); lifeExpectancyInput.value = lifeExpectancyYears; return; } lifeExpectancyYears = newE; calculateTotalWeeks(); populateYearSelector(); refreshCurrentView(); updateStats(); calculateAgeAndCompletedWeeks(); /* Update age display */ saveDataToLocalStorage(); console.log("Life expectancy updated to:", lifeExpectancyYears); }
+        /** Populates year selector dropdown */
+        function populateYearSelector() { const curVal = yearSelect.value ? parseInt(yearSelect.value) : currentYearIndex; const birthYear = startDate.getFullYear(); yearSelect.innerHTML = ''; for (let i = 0; i < lifeExpectancyYears; i++) { const o = document.createElement('option'); o.value = i; const calYear = birthYear + i; o.textContent = `Year ${calYear} (Age ${i + 1})`; yearSelect.appendChild(o); } if (curVal < lifeExpectancyYears) { yearSelect.value = curVal; currentYearIndex = curVal; } else { currentYearIndex = Math.max(0, lifeExpectancyYears - 1); yearSelect.value = currentYearIndex; if (currentView === 'year') generateYearView(currentYearIndex); } }
+        /** Refreshes the currently active view */
+        function refreshCurrentView() { clearSingleSelection(); clearMultiSelection(); if (currentView === 'grid') generateGridView(); else if (currentView === 'decade') generateDecadeView(); else if (currentView === 'year') { if (currentYearIndex >= lifeExpectancyYears) { currentYearIndex = Math.max(0, lifeExpectancyYears - 1); yearSelect.value = currentYearIndex; } generateYearView(currentYearIndex); } }
+
+        // --- Initialization ---
+        function init() {
+            loadDataFromLocalStorage(); // Includes loading theme preference state now
+            loadThemePreference(); // Applies the loaded/default theme visually
+            populateYearSelector();
+            calculateAgeAndCompletedWeeks(); // Calculates actual completed weeks AND updates initial age display
+            switchToGridView(); // Start with grid view
+            checkExportReminder(); // Show static reminder text
+
+            // Setup event listeners
+            themeToggleBtn.addEventListener('click', toggleTheme);
+            updateBirthDateBtn.addEventListener('click', handleUpdateBirthDate);
+            birthDateInput.addEventListener('keypress', function(e) { if (e.key === 'Enter') handleUpdateBirthDate(); });
+            lifeExpectancyInput.addEventListener('change', handleExpectancyChange);
+            yearSelect.addEventListener('change', (e) => { switchToYearView(parseInt(e.target.value)); });
+            // REMOVED About Modal Listeners
+            // Export/Import listeners are via onclick/onchange in HTML
+
+             // Add listener to update age display when tab becomes visible again
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState === 'visible') {
+                    calculateAgeAndCompletedWeeks(); // Recalculate age when tab is viewed
+                    console.log("Age display refreshed on visibility change.");
+                }
+            });
+
+            console.log("Life Calendar Initialized.");
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+
+    </script>
+
+</body>
+</html>
